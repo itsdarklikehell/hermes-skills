@@ -66,7 +66,7 @@ def parse_page(raw_text):
 
 def safe_fetch(url):
     # Include proxy env vars if needed (common in CN/restricted environments)
-    r = terminal(f'export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890; agent-browser open "{url}" 2>&1 | head -1 && agent-browser snapshot 2>&1')
+    r = terminal(f'agent-browser open "{url}" 2>&1 | head -1 && agent-browser snapshot 2>&1')
     return r.get("output", "")
 
 all_repos = {}
@@ -109,7 +109,7 @@ with open('/tmp/repos.json') as f:
 
 def get_repo_desc(repo):
     """GitHub page title format: 'GitHub - owner/repo: description · GitHub'"""
-    r = terminal(f'export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890; agent-browser open "https://github.com/{repo}" 2>&1 | head -1')
+    r = terminal(f'agent-browser open "https://github.com/{repo}" 2>&1 | head -1')
     title = r.get("output", "")
     # Title separator may be · or - before "GitHub"
     m = re.search(r'GitHub - [^:]+: (.+?)(?:\s[·•]\s| - )GitHub', title)
@@ -139,7 +139,7 @@ When `get_repo_desc()` returns empty for some repos, use this cascade:
 1. **Snapshot fallback** — fetch the repo page and scan accessibility tree for long StaticText:
 ```python
 def get_desc_via_snapshot(repo):
-    r = terminal(f'export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890; agent-browser open "https://github.com/{repo}" 2>&1 | head -1 && agent-browser snapshot 2>&1 | head -80')
+    r = terminal(f'agent-browser open "https://github.com/{repo}" 2>&1 | head -1 && agent-browser snapshot 2>&1 | head -80')
     for line in r.get("output","").split('\n'):
         m = re.search(r'StaticText "([^"]{25,120})"', line)
         if m:
@@ -271,7 +271,7 @@ For bilingual (EN + CN) awesome lists:
 - **Rebuild pattern**: If you hit the 50-call cap mid-loop, rebuild from saved JSON in the next call rather than resuming mid-array
 - **Title regex variation**: GitHub title separator can be `·` (middle dot U+00B7) or ` - ` — use `(?:\s[·•]\s| - )` to match both
 - **Compound keyword searches**: Queries like `keyword+feature` (e.g. `claude+code+hooks`) yield many unique repos not found by the main keyword — always add feature/domain-specific compound queries
-- **Proxy in restricted networks**: Prepend `export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890;` to terminal commands when in China or behind a firewall
+- **Proxy in restricted networks**: Prepend `export https_proxy=http://YOUR_PROXY_HOST:PORT http_proxy=http://YOUR_PROXY_HOST:PORT;` to terminal commands when in China or behind a firewall
 - **GitHub API rate-limiting with no token**: Unauthenticated requests to `api.github.com/repos/{owner}/{repo}` get rate-limited to 60/hour. When processing 100+ repos in two `execute_code` blocks, the second block will return all zeros. Mitigate by: (1) chunking smaller (30 repos per block), (2) adding `sleep 1` between calls, or (3) hardcoding known star counts for famous repos rather than fetching them all
 - **`write_file` uses absolute paths from agent perspective**: On macOS, `write_file("/root/Desktop/...")` writes nowhere useful. Always resolve the real home directory first with `terminal("echo $HOME")` and use that path (e.g. `/Users/username/Desktop/...`). The `execute_code` sandbox assumes Linux paths — use `terminal("mkdir -p ~/Desktop/project")` to create dirs, then write with the real path
 - **Description cross-contamination in search results**: When scraping GitHub search pages, repo descriptions sometimes bleed into adjacent repos' parsed data (e.g. `dogecoin/dogecoin` getting monero's description). Always verify descriptions for the top 20 repos manually or via a `known_desc` dict for well-known projects

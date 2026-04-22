@@ -58,7 +58,7 @@ def my_callback(session_id="", user_message="", assistant_response="",
 ```python
 # /tmp/test_plugin.py
 import sys
-sys.path.insert(0, '/Users/itgoyo/.hermes/hermes-agent')
+sys.path.insert(0, os.path.expanduser('~/.hermes/hermes-agent'))
 from hermes_cli.plugins import get_plugin_manager, invoke_hook
 
 pm = get_plugin_manager()

@@ -76,7 +76,7 @@ time.sleep(3)
 
 ## 输出要求（用户偏好）
 
-输出 HTML 报告，保存到 `/Users/itgoyo/Documents/Hermes/`，要求：
+输出 HTML 报告，保存到 `~/Documents/Hermes/`，要求：
 - **所有内容必须可点击跳转**：帖子 → 原帖、话题 → 话题页、币种 → 交易页
 - 卡片悬停有金色边框 + 位移动画（符合币安风格 #f0b90b）
 - 暗色主题（背景 #0b0e11）
@@ -89,7 +89,7 @@ time.sleep(3)
 - `js()` helper 对 Binance Square **无效**，永远返回 None。必须走 `cdp()` 路径。
 - 话题链接中中文会被 URL encode，要用 `encodeURIComponent` 或直接从链接列表里取。
 - 页面初次加载只显示 ~4 条帖子，需滚动后才能加载更多。
-- **macOS 系统 SOCKS 代理（127.0.0.1:7890）会导致 browser-harness daemon 连接 ws://localhost:9222 报错**：`connecting through a SOCKS proxy requires python-socks`。修复：在 harness 的 uv venv 中安装 python-socks。
+- **macOS 系统 SOCKS 代理（YOUR_PROXY_HOST:PORT）会导致 browser-harness daemon 连接 ws://localhost:9222 报错**：`connecting through a SOCKS proxy requires python-socks`。修复：在 harness 的 uv venv 中安装 python-socks。
 - **Chrome 必须用 `--headless=new` + `/tmp` 临时目录启动**：直接用真实 user-data-dir 会报 "requires non-default data directory"。
 - **Chrome 每次重启后 WS URL 中的 browser UUID 会变**，必须重新获取并重新设置 `BU_CDP_WS` 环境变量。
 - `/tmp/chromedebug` 路径不在 browser-harness PROFILES 自动发现列表中，必须手动设置 `BU_CDP_WS` 环境变量或写入 `DevToolsActivePort` 文件。

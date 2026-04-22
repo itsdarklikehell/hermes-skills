@@ -107,7 +107,7 @@ print(info)  # 从纯文本中手动解析帖子标题、作者、链接
 将抓取到的数据组装成以下 HTML 模板，写入文件：
 
 ```
-/Users/itgoyo/Documents/Hermes/binance_square_今日热点.html
+~/Documents/Hermes/binance_square_今日热点.html
 ```
 
 ---
@@ -152,7 +152,7 @@ print(info)  # 从纯文本中手动解析帖子标题、作者、链接
 
 7. **输出文件路径**：固定为 `~/Documents/Hermes/binance_square_今日热点.html`，用 `write_file()` 写入。
 
-8. **生成完毕后** 用 `terminal("open /Users/itgoyo/Documents/Hermes/binance_square_今日热点.html")` 自动在浏览器打开预览。
+8. **生成完毕后** 用 `terminal("open ~/Documents/Hermes/binance_square_今日热点.html")` 自动在浏览器打开预览。
 
 ---
 
@@ -171,5 +171,5 @@ print(info)  # 从纯文本中手动解析帖子标题、作者、链接
 1. **作者** — 内容摘要（时间/浏览量）
 ...
 
-文件已保存：`/Users/itgoyo/Documents/Hermes/binance_square_今日热点.html`
+文件已保存：`~/Documents/Hermes/binance_square_今日热点.html`
 ```
